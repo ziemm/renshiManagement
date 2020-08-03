@@ -1,3 +1,2 @@
 /.idea/
-
-/vhrserver/vhr-*/target/
+target/
