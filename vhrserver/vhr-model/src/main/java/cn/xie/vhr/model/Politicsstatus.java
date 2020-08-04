@@ -1,8 +1,9 @@
 package cn.xie.vhr.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Politicsstatus {
+public class Politicsstatus implements Serializable {
     private Integer id;
 
     private String name;

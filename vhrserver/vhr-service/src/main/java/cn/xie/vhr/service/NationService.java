@@ -1,6 +1,8 @@
 package cn.xie.vhr.service;
 
+import cn.xie.vhr.mapper.NationMapper;
 import cn.xie.vhr.model.Nation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +13,11 @@ import java.util.List;
  **/
 @Service
 public class NationService {
+
+    @Autowired
+    NationMapper nationMapper;
+
     public List<Nation> getAllNations() {
-        return null;
+        return nationMapper.getAllNations();
     }
 }

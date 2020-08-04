@@ -1,6 +1,8 @@
 package cn.xie.vhr.service;
 
+import cn.xie.vhr.mapper.PoliticsstatusMapper;
 import cn.xie.vhr.model.Politicsstatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +13,11 @@ import java.util.List;
  **/
 @Service
 public class PoliticsstatusService {
+
+    @Autowired
+    PoliticsstatusMapper politicsstatusMapper;
+
     public List<Politicsstatus> getAllPoliticsstatus() {
-        return null;
+        return politicsstatusMapper.getAllPoliticsstatus();
     }
 }

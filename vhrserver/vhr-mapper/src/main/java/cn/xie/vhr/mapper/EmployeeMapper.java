@@ -30,4 +30,6 @@ public interface EmployeeMapper {
     Integer maxWorkID();
 
     Integer addEmps(@Param("list") List<Employee> list);
+
+    Employee getEmployeeById(Integer id);
 }

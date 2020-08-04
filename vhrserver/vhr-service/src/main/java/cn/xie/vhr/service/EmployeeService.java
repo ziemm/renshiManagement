@@ -2,6 +2,9 @@ package cn.xie.vhr.service;
 
 import cn.xie.vhr.mapper.EmployeeMapper;
 import cn.xie.vhr.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +19,12 @@ import java.util.List;
  **/
 @Service
 public class EmployeeService {
-
+    public static final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
     @Autowired
     EmployeeMapper employeeMapper;
+
+    @Autowired
+    RabbitTemplate rabbitTemplate;
 
     SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
     SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
@@ -46,7 +52,16 @@ public class EmployeeService {
         Double month = (Double.parseDouble(yearFormat.format(endContract))-Double.parseDouble(yearFormat.format(beginContract)))*12+
                 (Double.parseDouble(monthFormat.format(endContract))-Double.parseDouble(monthFormat.format(beginContract)));
         employee.setContractTerm(Double.parseDouble(decimalFormat.format(month/12)));
-        return employeeMapper.insertSelective(employee);
+
+        //发送入职邮件
+        int result = employeeMapper.insertSelective(employee);
+        if(result==1){
+            //此处使用主键回填后的员工信息，以供通过信息中的主键id查到该刚添加的员工
+            Employee emp = employeeMapper.getEmployeeById(employee.getId());
+            logger.info(emp.toString());
+            rabbitTemplate.convertAndSend("xie.email.welcome",emp);
+        }
+        return result;
     }
 
     public Integer maxWorkID() {
